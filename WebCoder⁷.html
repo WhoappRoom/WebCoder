@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebCoder⁷</title>
+    <script src="https://ace.c9.io/build/src-noconflict/ace.js"></script>
+    <script src="https://ace.c9.io/build/src-noconflict/ext-language_tools.js"></script>
+    <link rel="icon" href="https://i.ibb.co/tMZkj3F/Whoapp.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+      body{
+        margin: 0;
+        padding: 0;
+        background-color: #f3f3f3;
+      }
+      #header{
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        justify-content: space-between;
+        align-items: center;
+        display: flex;
+        height: 50px;
+        background-color: #434343;
+      }
+      #left-side{
+        position: fixed;
+        top: 50px;
+        left: 0;
+        margin: 0;
+        padding: 0;
+        width: 55px;
+        overflow: auto;
+        text-align: center;
+        justify-content: space-between;
+        display: flex;
+        flex-wrap: wrap;
+        bottom: 55px;
+        background-color: #434343;
+      }
+      #editor{
+        position: fixed;
+        top: 51px;
+        right: 0;
+        left: 55px;
+        bottom: 70px;
+      }
+      #preview{
+        position: fixed;
+        top: 50px;
+        display: none;
+        width: 99.7%;
+        background-color: #fff;
+        border: none;
+        height: 100vh;
+        left: 0;
+      }
+      #footer{
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        height: 70px;
+        background-color: #434343;
+      }
+      button{
+        width: 50px;
+        border: none;
+        background-color: #434343;
+        color: #fff;
+        text-align: center;
+        border-radius: 0%;
+        font-size: 25px;
+      }
+      button:active{
+        background-color: #313131d7;
+      }
+      #row{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+      #mp{
+        width: 60px;
+        font-size: 18px;
+        border-radius: 0%;
+        height: 35px;
+      }
+      #search-area{
+        position: fixed;
+        display: none;
+        bottom: 70px;
+        background-color: #313131;
+        left: 0;
+        right: 0;
+        padding: 10px 0px 10px 0px;
+        text-align: center;
+      }
+      #input-search{
+        width: 98%;
+        height: 30px;
+        padding: 0px 0px 0px 10px;
+        font-size: 18px;
+        outline: none;
+        color: #fff;
+        border: 5px solid gray;
+        background-color: transparent;
+      }
+      #Show-search,
+      #cancel-search{
+        height: 40px;
+        width: 48%;
+        margin-top: 5px;
+        border-radius: 0%;
+        border: 2px solid transparent;
+      }
+      #s{
+        font-size: 15px;
+      }
+      #header2{
+        position: fixed;
+        height: 50px;
+        background-color: #434343;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 0px 0px 0px 10px;
+        display: none;
+      }
+      #back-button{
+        height: 50px;
+        width: 70px;
+      }
+      #fontSize-area{
+        text-align: center;
+        position: fixed;
+        height: 100vh;
+        padding: 10px;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+      }
+      #my-size {
+        width: 80%;
+        height: 6px;
+        outline: none;
+        border: none;
+        background: linear-gradient(to right, #ff6347, #4b0082);
+        appearance: none;
+        border-radius: 90px;
+      }
+      #my-size::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: linear-gradient(to right, #ff6347, #4b0082);
+      }
+      #a{
+        display: none;
+      }
+      #f{
+        width: 90%;
+        height: 200px;
+        z-index: 5;
+        padding: 50px 0px 0px 0px;
+        background: #313131;
+      }
+      #m{
+        font-size: 25px;
+        color: royalblue;
+      }
+      #my{
+        font-size: 30px;
+        background: radial-gradient(#fff, #8230);
+        -webkit-background-clip: text;
+        color: transparent;
+        font-weight: bold;
+      }
+      #backButton2{
+        position: fixed;
+        top: 0;
+        background-color: transparent;
+        color: transparent;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 3;
+      }
+      #otherApps{
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        background-color: #313131;
+        display: none;
+        overflow: scroll;
+        right: 0;
+      }
+      #areaApps{
+        display: flex;
+        flex-wrap: wrap;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      img{
+        width: 100%;
+        height: 50vh;
+        border-radius: 50%;
+      }
+      #download{
+        width: 90%;
+        height: 60px;
+        background: linear-gradient(#ced869, #536d1b);
+        font-size: 25px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        text-align: center;
+        border: none;
+        margin-bottom: 10px;
+        margin-top: 40px;
+        border-radius: 3px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      #b{
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 35px;
+      }
+      .ch{
+        height: 50px;
+      }
+      #myS{
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background-color: #000;
+        display: block;
+      }
+      #lo{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: black;
+      }
+      #adding{
+        border: 10px double royalblue;
+        width: 160px;
+        border-radius: 50%;
+        height: 160px;
+        border-bottom-color: transparent;
+        border-top-color: transparent;
+        animation: 1s l linear infinite;
+      }
+      @keyframes l {
+        to {
+          transform: rotate(360deg);
+      }
+    </style>
+  </head>
+  <body>
+    <header id="header">
+  <button onclick="cycleThemes()" class="ch"><i class="fa fa-palette"></i></button>
+  <button id="readOnlyToggle" onclick="toggleReadOnly()" class="ch"><i class="fa fa-lock-open"></i></button>
+  <button id="upload" onclick="upload()" class="ch"><i class="fa fa-upload"></i></button>
+  <button id="downloadApps" onclick="downloadApps()" class="ch"><i class="fa fa-download"></i></button>
+  <button id="updatePreview" onclick="updatePreview()" class="ch"><i class="fa fa-play"></i></button>
+  </header>
+    <div id="left-side">
+      <button id="search"><i class="fa fa-search" onclick="searchBtn()"></i><span id="s">Search</span></button>
+      <button id="undo"><i class="fas fa-undo"></i><span id="s">Undo</span></button>
+      <button id="redo"><i class="fas fa-redo"></i><span id="s">Redo</span></button>
+      <button id="copy"><i class="fa fa-copy"></i><span id="s">Copy</span></button>
+      <button id="font"><i class="fa fa-font"></i><span id="s">Font Size</span></button>
+      <button id="select-all"><i class="fas fa-list"></i><span id="s">Select All</span></button>
+      <button id="arrowUp"><i class="fa fa-arrow-up"></i><span id="s">Line Up</span></button>
+      <button id="arrowDown"><i class="fa fa-arrow-down"></i><span id="s">Line Down</span></button>
+      <button id="updatePreview" onclick="updatePreview()"><i class="fa fa-play"></i><span id="s">Run</span></button>
+    </div>
+    <div id="editor"></div>
+    <div id="search-area">
+      <div id="f">
+        <div id="n">
+          <input type="text" id="input-search" placeholder="Search">
+          <button id="Show-search">Ok</button>
+          <button id="cancel-search" onclick="searchhideBrn()">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <div id="otherApps">
+      <div id="areaApps">
+        <img src="https://i.ibb.co/tMZkj3F/Whoapp.jpg">
+        <a id="download" href="https://www.appcreator24.com/app2609448-vag0so" download>Whoapp</a>
+        <img src="https://i.ibb.co/PWz8z5W/9a5e3a54-0f0e-42a2-ab09-3ab748173cfe.png">
+        <a href="https://www.appcreator24.com/app2905296-gwvr2i" id="download">ChatMe (AI) Tools</a>
+      </div>
+      <button id="b" onclick="b()"><i class="fa fa-times"></i></button>
+    </div>
+    <div id="a">
+      <div id="fontSize-area">
+        <div id="f">
+          <span id="my">Font Size: 12</span>
+          <br>
+          <span id="m">12</span>
+          <input type="range" value="12" min="12" max="36" id="my-size" oninput="mySize()">
+          <span id="m">36</span>
+        </div>
+        <button id="backButton2"><i class="fa fa-arrow-left"></i></button>
+      </div>
+    </div>
+    <header id="header2">
+      <button id="back-button" onclick="backButton()"><i class="fa fa-arrow-left"></i></button>
+    </header>
+    <iframe id="preview"></iframe>
+    <footer id="footer">
+      <div id="row">
+       <button  id="mp" class="mn" onclick="appendValue('{')"> { </button>
+       <button  id="mp" class="mn" onclick="appendValue('}')"> } </button>
+       <button  id="mp" class="mn" onclick="appendValue('}')"> [ </button>
+       <button  id="mp" class="mn" onclick="appendValue('}')"> ] </button>
+       <button id="mp"  class="mn" onclick="appendValue('(')"> ( </button>
+       <button  id="mp" class="mn" onclick="appendValue(')')"> ) </button>
+       <button  id="mp" class="mn" onclick="appendValue(';')"> ; </button>
+       <button id="mp"  class="mn" onclick="appendValue('<')"> &lt; </button>
+       <button  id="mp" class="mn" onclick="appendValue('>')"> &gt; </button>
+       </div>
+       <div id="row">
+       <button id="mp"  class="mn" onclick="appendValue('\'')"> ' </button>
+       <button  id="mp" class="mn" onclick="appendValue('&quot;')"> " </button>
+       <button id="mp"  class="mn" onclick="appendValue('&')"> & </button>
+       <button id="mp"  class="mn" onclick="appendValue('+')"> + </button>
+       <button id="mp"  class="mn" onclick="appendValue('-')"> - </button>
+       <button  id="mp" class="mn" onclick="appendValue('|')"> | </button>
+       <button  id="mp" class="mn" onclick="appendValue('=')"> = </button>
+       <button  id="mp" class="mn" onclick="appendValue('/')"> / </button>
+       <button id="mp" class="mn" onclick="appendValue('!')"> ! </button>
+      </div>
+    </footer>
+    <div id="myS">
+      <div id="lo">
+        <div id="adding"></div>
+      </div>
+    </div>
+    <script>
+      let editor = ace.edit('editor');
+      editor.setTheme("ace/theme/monokai");
+      editor.session.setMode("ace/mode/html");
+     editor.setValue(localStorage.getItem('saveData'));
+     editor.getSession().on('change', function () {
+       localStorage.setItem('saveData', editor.getValue());
+     });
+      editor.setOptions({
+        autoScrollEditorIntoView: true,
+        enableBasicAutocompletion: true,
+        useWorker: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true,
+        showInvisibles: true,
+        showPrintMargin: true,
+        fontSize: "12px",
+        displayIndentGuides: true,
+    });
+    editor.setOption("wrap", true);
+    function updatePreview() {
+        let htmlCode = editor.getValue();
+        let previewFrame = document.getElementById("preview");
+        let editors = document.getElementById("editor");
+        let footer = document.getElementById("footer");
+        let header = document.getElementById("header");
+        let leftSide = document.getElementById("left-side");
+        let header2 = document.getElementById('header2');
+        let preview = previewFrame.contentDocument || previewFrame.contentWindow.document;
+        preview.open();
+        preview.write(htmlCode);
+        preview.close();
+        previewFrame.style.display = 'block';
+        header2.style.display = 'block';
+        editors.style.display = 'none';
+        footer.style.display = 'none';
+        header.style.display = 'none';
+        leftSide.style.display = 'none';
+    }
+    function backButton () {
+        let previewFrame = document.getElementById("preview");
+        let editors = document.getElementById("editor");
+        let footer = document.getElementById("footer");
+        let header = document.getElementById("header");
+        let leftSide = document.getElementById("left-side");
+        let header2 = document.getElementById('header2');
+        previewFrame.style.display = 'none';
+        header2.style.display = 'none';
+        editors.style.display = 'block';
+        footer.style.display = 'flex';
+        header.style.display = 'flex';
+        leftSide.style.display = 'flex';
+    }
+    function appendValue(value) {
+      editor.insert(value);
+      editor.focus();
+    }
+    document.getElementById('undo').addEventListener('click', function() {
+        editor.undo();
+        editor.focus();
+      });
+      document.getElementById('redo').addEventListener('click', function() {
+        editor.redo();
+        editor.focus();
+      });
+      document.getElementById('arrowUp').addEventListener('click', function() {
+        let currentPosition = editor.getCursorPosition();
+        let currentLine = editor.session.getLine(currentPosition.row);
+        yaab.session.insert({ row: currentPosition.row - 1, column: 0 }, currentLine + '\n');
+        editor.moveCursorTo(currentPosition.row - 1, currentPosition.column);
+        editor.focus();
+      });
+      document.getElementById('arrowDown').addEventListener('click', function() {
+        let currentPosition = editor.getCursorPosition();
+        let currentLine = editor.session.getLine(currentPosition.row);
+        editor.session.insert({ row: currentPosition.row + 1, column: 0 }, currentLine + '\n');
+        editor.moveCursorTo(currentPosition.row + 1, currentPosition.column);
+        editor.focus();
+      });
+      var copyButton = document.getElementById("copy");
+      var selectButton = document.getElementById("select-all");
+      selectButton.addEventListener("click", function() {
+        editor.selectAll();
+        editor.focus();
+      });
+        copyButton.addEventListener("click", function() {
+            var htmlContent = editor.getValue();
+            var textarea = document.createElement("textarea");
+            textarea.value = htmlContent;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+            editor.focus();
+        });
+        var searchButton = document.getElementById('Show-search');
+        searchButton.addEventListener('click', function() {
+          var searchValue = document.getElementById('input-search').value;
+          var ge = document.getElementById('search-area');
+          ge.style.display = 'none';
+          var range = editor.find(searchValue, {
+            wrap: true,
+            caseSensitive: false,
+            wholeWord: false,
+            regExp: false,
+          });
+      if (range) {
+        editor.selection.setRange(range);
+        editor.scrollToLine(range.start.row, true, true, function () {});
+      }
+    });
+    function searchBtn () {
+      document.getElementById('search-area').style.display = 'block';
+    };
+    function searchhideBrn () {
+      document.getElementById('search-area').style.display = 'none';
+    };
+    var showFont = document.getElementById('font');
+    var sh = document.getElementById('backButton2');
+    sh.addEventListener('click', function () {
+      document.getElementById('a').style.display = 'none';
+    })
+    showFont.addEventListener('click', function () {
+      document.getElementById('a').style.display = 'block';
+    })
+    function mySize () {
+      var gr = document.getElementById('my-size').value;
+      var r = document.getElementById('my');
+      var k = document.getElementById('editor');
+      k.style.fontSize = gr + 'px';
+      r.textContent = 'Font Size: ' + gr;
+      localStorage.setItem('fontSize', gr)
+    }
+    var getV = localStorage.getItem('fontSize');
+    if(getV){
+      document.getElementById('my').textContent = 'Font Size: ' + getV;
+      document.getElementById('my-size').value = getV;
+      document.getElementById('editor').style.fontSize = getV + 'px';
+    }
+    const themes = [
+    'ace/theme/monokai',
+    'ace/theme/tomorrow_night',
+    'ace/theme/solarized_dark',
+    'ace/theme/chrome',
+    'ace/theme/twilight',
+    'ace/theme/dracula',
+    'ace/theme/github',
+    'ace/theme/gruvbox',
+    'ace/theme/ambiance',
+    'ace/theme/github_dark',
+    'ace/theme/one_dark',
+    'ace/theme/nord_dark',
+    'ace/theme/terminal',
+    'ace/theme/cobalt'
+    ];
+    let currentThemeIndex = 0;
+    function cycleThemes() {
+      currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+      const selectedTheme = themes[currentThemeIndex];
+      editor.setTheme(selectedTheme);
+      localStorage.setItem('themesB', selectedTheme);
+    }
+    var keyTheme = localStorage.getItem('themesB');
+    if (keyTheme) {
+      var setT = ace.edit('editor');
+      setT.setTheme(keyTheme);
+    }
+    function toggleReadOnly() {
+      editor.setReadOnly(!editor.getReadOnly());
+      var toggle = document.getElementById('readOnlyToggle');
+      if(toggle.innerHTML === '<i class="fa fa-lock-open"></i>') {
+        toggle.innerHTML = '<i class="fa fa-lock"></i>'
+      } else {
+        toggle.innerHTML = `<i class="fa fa-lock-open"></i>`;
+      }
+    }
+    function upload() {
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.onchange = function () {
+        var file = input.files[0];
+        var reader = new FileReader();
+        reader.onload = function () {
+            editor.setValue(reader.result);
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+}
+    </script>
+    <script>
+      function downloadApps () {
+        document.getElementById('otherApps').style.display = 'block';
+        document.getElementById('footer').style.display = 'none';
+      }
+      function b () {
+        document.getElementById('otherApps').style.display = 'none';
+        document.getElementById('footer').style.display = 'block';
+      }
+      window.onload = function () {
+        document.getElementById('myS').style.display = 'none'
+      }
+    </script>
+  </body>
+</html>
