@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authentication</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f3f3f3;
+    }
+
+    #loginForm {
+      text-align: center;
+      padding: 10px 30px 10px 10px;
+      width: 600px;
+      background-color: #fff;
+    }
+    input {
+      width: 100%;
+      font-size: 20px;
+      height: 50px;
+      transition: 0.7s;
+      padding: 0px 0px 0px 10px;
+      margin-top: 20px;
+      outline-color: red;
+      border-radius: 7px;
+    }
+    input:hover{
+      outline-color: red;
+    }
+    button {
+      padding: 15px 20px;
+      width: 100%;
+      border-radius: 3px;
+      color: #fff;
+      border: none;
+      background-color: #006bd6;
+      margin-top: 20px;
+    }
+    #m{
+      display: flex;
+      padding: 10px;
+      align-items: center;
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    button:active{
+      background-color: #888888;
+    }
+    #res{
+      background-color: transparent;
+      text-align: left;
+    }
+    #resetPassword, a{
+      text-decoration: none;
+      color: #044103;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    #results,
+    #resultsC,
+    #resultsB{
+      font-family: Courier;
+      margin-top: 30px;
+      font-weight: bold;
+      font-size: 20px;
+      color: green;
+    }
+    @keyframes shake {
+      0% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-5px);
+      }
+      50% {
+        transform: translateX(5px);
+      }
+      75% {
+        transform: translateX(-5px);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
+    .shake {
+      animation: shake 0.2s ease;
+    }
+    #resetPassword{
+      background-color: #888888;
+    }
+    #lo{
+      border: 10px double #e3ff32;
+      border-top-color: transparent;
+      border-bottom-color: transparent;
+      width: 160px;
+      animation: 1s l infinite;
+      height: 160px;
+      border-radius: 50%;
+    }
+    @keyframes l {
+      to{
+        transform: rotate(360deg);
+      }
+    }
+    #lol{
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      bottom: 0;
+      background-color: #87878787;
+      backdrop-filter: blur(4px);
+    }
+  </style>
+</head>
+<body>
+  <div id="loginForm">
+    <div id="loginF">
+      <h2>Login</h1>
+      <input type="email" id="email" required placeholder="Email.">
+    <input type="password" id="password" required placeholder="Password.">
+    <div id="m">
+      <div id="resultsB"></div>
+      <button id="login">Login</button>
+      <button id="res"><a href="#" id="resetPasswordShow">Forgot Password?</a></button>
+      <button id="show">Create New Account</button>
+    </div>
+    </div>
+    <div id="createAccountForm" style="display:none;">
+      <h2>Create Account</h2>
+      <input type="email" id="createEmail" required placeholder="Email.">
+      <input type="password" id="createPassword" required placeholder="Password.">
+      <div id="resultsC"></div>
+      <div id="m">
+        <button id="createAccount">Create Account</button>
+      </div>
+  </div>
+  <div id="popup" style="display: none;">
+    <h1>Reset Password</h1>
+    <p>You can reset the password we will send link to change password into your email </p><br>
+    <p>Please Enter your correct address email </p><br>
+    <input type="email" id="resetPass" placeholder="Email.">
+    <div id="results"></div>
+    <div id="m">
+      <button id="resetPassword">Continue </button>
+    </div>
+  </div>
+  </div>
+  <div id="contents" style="display: none;">
+    <h1>Welcome User</h1>
+    <button id="next">Next</button>
+    <button id="logout">Logout</button>
+  </div>
+  <div id="lol">
+    <div id="lo"></div>
+  </div>
+  <div id="usersTable" style="display: none;">
+  <h2>Users Table (Admin Only)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Email</th>
+        <!-- Add more columns as needed -->
+      </tr>
+    </thead>
+    <tbody id="usersTableBody"></tbody>
+  </table>
+</div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    const firebaseConfig = {
+    apiKey: "AIzaSyA7SBddUcN2dDKwYwPR_o4HsbHgU648fM8",
+    authDomain: "new-app-ad5ea.firebaseapp.com",
+    projectId: "new-app-ad5ea",
+    storageBucket: "new-app-ad5ea.appspot.com",
+    messagingSenderId: "13560733487",
+    appId: "1:13560733487:web:05dcd1db0bcf027b410bda",
+    measurementId: "G-F86L86DK9W"
+  };
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth();
+    const loginForm = document.getElementById('loginForm');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const contents = document.getElementById('contents');
+    const adminEmail = "cabdiwaaxidsiciid100@gmail.com";
+    const adminPassword = "laylo1001";
+
+    const createEmail = document.getElementById('createEmail');
+    const createPassword = document.getElementById('createPassword');
+    const loginButton = document.getElementById('login');
+    const resultsC = document.getElementById('resultsC');
+    const resultsB = document.getElementById('resultsB');
+    const loader = document.getElementById('lol');
+    const resetPasswordButton = document.getElementById('resetPassword');
+    const resetPasswordShow = document.getElementById('resetPasswordShow');
+    const loginF = document.getElementById('loginF');
+    const createAccountForm = document.getElementById('createAccountForm');
+    const show = document.getElementById('show');
+    const logout = document.getElementById('logout');
+    const next = document.getElementById('next');
+    const createAccount = document.getElementById('createAccount');
+    window.onload = function () {
+      loader.style.display = 'none';
+    }
+    logout.addEventListener('click', () => {
+      contents.style.display = 'none';
+      loginForm.style.display = 'block';
+    });
+    next.addEventListener('click', () => {
+      contents.style.display = 'none';
+      const hh = document.createElement('a');
+      hh.href = 'WebCoderV⁷.html';
+      hh.click();
+      localStorage.setItem('codeE', hh);
+      loginForm.style.display = 'none';
+    });
+    loginButton.addEventListener('click', () => {
+      const email = emailInput.value;
+      const password = passwordInput.value;
+      signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+          const user = userCredential.user;
+          resultsB.innerText = 'User logged in: ' + user.email;
+          localStorage.setItem('login', email);
+          loader.style.display = 'flex';
+          resultsB.style.color = 'green';
+          setTimeout(function () {
+            contents.style.display = 'block';
+            loginForm.style.display = 'none';
+            loader.style.display = 'none';
+          }, 2000);
+        })
+      .catch((error) => {
+          resultsB.innerText = 'Login error: ' + error.message;
+          resultsB.style.color = 'red';
+          loginForm.classList.add('shake'); // Add shake animation class
+          setTimeout(() => {
+            loginForm.classList.remove('shake'); // Remove shake animation class after some time
+          }, 500);
+        });
+    });
+    var k = localStorage.getItem('login');
+    if(k){
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('contents').style.display = 'block';
+    }
+    var kk = localStorage.getItem('codeE');
+    if(kk){
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('contents').style.display = 'block';
+      next.click();
+    }
+    show.addEventListener('click', () => {
+      createAccountForm.style.display = "block";
+      loginF.style.display = "none";
+    });
+    createAccount.addEventListener('click', () => {
+      const emailI = createEmail.value;
+      const passwordI = createPassword.value;
+      createUserWithEmailAndPassword(auth, emailI, passwordI)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          resultsC.innerText = 'User created account successfully: ' + user.email;
+          resultsC.style.color = 'green';
+          loader.style.display = 'flex';
+          setTimeout(function () {
+            loader.style.display = 'none';
+            loginForm.style.display = 'none';
+            contents.style.display = 'block';
+          }, 5000);
+        })
+        .catch((error) => {
+          resultsC.innerText = 'Create account error: ' + error.message;
+          resultsC.style.color = 'red';
+          loginForm.classList.add('shake');
+          setTimeout(() => {
+            loginForm.classList.remove('shake');
+          }, 500);
+        });
+    });
+    function resetPassword(email) {
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          results.innerText = 'Password reset email sent successfully. Check your email inbox.';
+          resetPasswordButton.style.backgroundColor = '#044103';
+          results.style.color = 'green';
+          resetPasswordButton.style.color = '#fff';
+        })
+        .catch((error) => {
+          results.innerText = 'Error sending password reset email: ' + error.message;
+          results.style.color = 'red';
+          resetPasswordButton.style.color = '#fff';
+          resetPasswordButton.style.backgroundColor = 'red';
+          loginForm.classList.add('shake')
+          setTimeout(() => {
+            loginForm.classList.remove('shake');
+          }, 500);
+        });
+    }
+    resetPasswordButton.addEventListener('click', () => {
+      const resetPass = document.getElementById('resetPass').value;
+      const email = resetPass;
+      resetPassword(email);
+    });
+    resetPasswordShow.addEventListener('click', () => {
+      createAccountForm.style.display = 'none';
+      loginF.style.display = 'none';
+      popup.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
