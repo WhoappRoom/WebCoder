@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>WebCoder⁷</title>
+    <title>WebCoderV⁷</title>
     <script src="https://ace.c9.io/build/src-noconflict/ace.js"></script>
     <script src="https://ace.c9.io/build/src-noconflict/ext-language_tools.js"></script>
     <link rel="icon" href="https://i.ibb.co/tMZkj3F/Whoapp.jpg">
@@ -45,7 +45,7 @@
         left: 55px;
         bottom: 70px;
       }
-      #preview{
+      #preview, .preview{
         position: fixed;
         top: 50px;
         display: none;
@@ -278,6 +278,7 @@
   <button id="upload" onclick="upload()" class="ch"><i class="fa fa-upload"></i></button>
   <button id="downloadApps" onclick="downloadApps()" class="ch"><i class="fa fa-download"></i></button>
   <button id="updatePreview" onclick="updatePreview()" class="ch"><i class="fa fa-play"></i></button>
+  <button id="logoutBtn" onclick="logoutBtn()" class="ch"><i class="fa fa-sign-out-alt"></i></button>
   </header>
     <div id="left-side">
       <button id="search"><i class="fa fa-search" onclick="searchBtn()"></i><span id="s">Search</span></button>
@@ -288,6 +289,8 @@
       <button id="select-all"><i class="fas fa-list"></i><span id="s">Select All</span></button>
       <button id="arrowUp"><i class="fa fa-arrow-up"></i><span id="s">Line Up</span></button>
       <button id="arrowDown"><i class="fa fa-arrow-down"></i><span id="s">Line Down</span></button>
+      <button id="images"><i class="fa fa-images"></i><span id="s">Images</span></button>
+      <button id="icons" onclick="icons()"><i class="fa fa-icons" ></i><span id="s">Icons</span></button>
       <button id="updatePreview" onclick="updatePreview()"><i class="fa fa-play"></i><span id="s">Run</span></button>
     </div>
     <div id="editor"></div>
@@ -553,8 +556,19 @@
         document.getElementById('otherApps').style.display = 'none';
         document.getElementById('footer').style.display = 'block';
       }
+      function logoutBtn () {
+        var link = document.createElement('a');
+        link.href = 'Login.html';
+        link.click();
+        localStorage.clear('codeE');
+      }
       window.onload = function () {
         document.getElementById('myS').style.display = 'none'
+      }
+      function icons () {
+        var h = document.createElement('a');
+        h.href = 'go:font-awesome'>
+        h.click();
       }
     </script>
   </body>
